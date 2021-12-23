@@ -74,11 +74,11 @@
       v-if="showOptions"
       class="options-row bg-gray-200 p-4 border-gray-300 border rounded-b-md border-t-0"
     >
-      <label for="options" class="mb-2 block font-bold"
-        >Image Query Parameters</label
-      >
+      <label for="options" class="mb-2 block font-bold">
+        Base Image Options
+      </label>
 
-      <div class="flex">
+      <div class="mb-4">
         <input
           v-model="options"
           type="text"
@@ -86,14 +86,29 @@
           class="uniform-input uniform-input-text mr-2"
           placeholder="q_auto,f_auto"
         />
-
-        <button
-          class="inline-flex items-center border-transparent font-medium rounded-md focus:outline-none focus:ring px-6 py-3 text-base leading-6 tracking-wider bg-secondary text-white hover:bg-opacity-75 border focus:border-gray-700 active:bg-opacity-75 focus:ring relative"
-          @click="save"
-        >
-          save
-        </button>
       </div>
+
+      <div>
+        <label for="options" class="mb-2 block font-bold">Breakpoints</label>
+        <div v-for="breakpoint in breakpoints" :key="breakpoint.name">
+          <p class="text-gray-700 text-xs">
+            {{ breakpoint.name }} (min-width: {{ breakpoint.minWidth }}px)
+          </p>
+          <input
+            type="text"
+            name="breakpoints"
+            class="uniform-input uniform-input-text mb-4"
+            placeholder="cloudinary url params"
+          />
+        </div>
+      </div>
+
+      <button
+        class="inline-flex items-center border-transparent font-medium rounded-md focus:outline-none focus:ring px-6 py-3 text-base leading-6 tracking-wider bg-secondary text-white hover:bg-opacity-75 border focus:border-gray-700 active:bg-opacity-75 focus:ring relative"
+        @click="save"
+      >
+        save
+      </button>
     </div>
   </div>
 </template>
@@ -103,6 +118,7 @@ export default {
   name: 'ItemRow',
   props: {
     asset: { type: Object, required: true },
+    breakpoints: { type: Array, required: true },
   },
   data() {
     return {

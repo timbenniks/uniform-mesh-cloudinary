@@ -9,6 +9,7 @@
       <ItemRow
         v-for="asset in selectedAssets"
         :key="asset.public_id"
+        :breakpoints="breakpoints"
         :asset="asset"
         @unlink="unlink"
         @saveOptions="saveOptions"
@@ -60,7 +61,7 @@ export default {
       if (this.location) {
         clearInterval(locationExists)
         this.metadata = this.location.getMetadata()
-        this.breakpoints = this.metadata.settigs.breakpoints
+        this.breakpoints = this.metadata?.settings?.breakpoints || []
         this.fillExistingValues()
       }
     }, 100)
@@ -123,6 +124,7 @@ export default {
             'q_auto,f_auto,w_150'
           ),
           options: this.metadata.parameterConfiguration.defaultoptions,
+          breakpoints: [],
         }
       })
 
