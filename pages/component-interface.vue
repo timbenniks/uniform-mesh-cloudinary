@@ -46,6 +46,7 @@ export default {
       cloudinaryInstantiated: false,
       showCloudinary: false,
       selectedAssets: [],
+      breakpoints = []
     }
   },
   async mounted() {
@@ -59,6 +60,7 @@ export default {
       if (this.location) {
         clearInterval(locationExists)
         this.metadata = this.location.getMetadata()
+        this.breakpoints = this.metadata.settigs.breakpoints
         this.fillExistingValues()
       }
     }, 100)
