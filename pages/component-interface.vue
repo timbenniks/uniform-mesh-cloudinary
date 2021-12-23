@@ -46,7 +46,7 @@ export default {
       cloudinaryInstantiated: false,
       showCloudinary: false,
       selectedAssets: [],
-      breakpoints = []
+      breakpoints: [],
     }
   },
   async mounted() {
