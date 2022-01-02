@@ -145,9 +145,11 @@ export default {
       this.fillExistingValues()
     },
 
-    async saveOptions({ id, options }) {
+    async saveOptions({ id, options, breakpoints }) {
       const existingValues = this.location.getValue()
       existingValues.find((value) => value.publicId === id).options = options
+      existingValues.find((value) => value.publicId === id).breakpoints =
+        breakpoints
 
       await this.location.setValue(existingValues)
       this.fillExistingValues()
