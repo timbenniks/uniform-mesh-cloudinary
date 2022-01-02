@@ -154,5 +154,3 @@ if (typeof window !== 'undefined') {
   // it is safe to reference window.UniformMeshSDK here
 }
 ```
-
-> IMPORTANT: the `useUniformMeshLocation` hook expects to be used as a descendant of a `UniformMeshLocationContextProvider` context provider. This happens automatically for you if you use the `UniformMeshSdkContextProvider`.
