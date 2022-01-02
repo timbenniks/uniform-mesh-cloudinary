@@ -9,6 +9,7 @@
       <ItemRow
         v-for="asset in selectedAssets"
         :key="asset.public_id"
+        :breakpoints="breakpoints"
         :asset="asset"
         @unlink="unlink"
         @saveOptions="saveOptions"
@@ -46,6 +47,7 @@ export default {
       cloudinaryInstantiated: false,
       showCloudinary: false,
       selectedAssets: [],
+      breakpoints: [],
     }
   },
   async mounted() {
@@ -59,6 +61,7 @@ export default {
       if (this.location) {
         clearInterval(locationExists)
         this.metadata = this.location.getMetadata()
+        this.breakpoints = this.metadata?.settings?.breakpoints || []
         this.fillExistingValues()
       }
     }, 100)
@@ -121,6 +124,7 @@ export default {
             'q_auto,f_auto,w_150'
           ),
           options: this.metadata.parameterConfiguration.defaultoptions,
+          breakpoints: [],
         }
       })
 
@@ -141,9 +145,11 @@ export default {
       this.fillExistingValues()
     },
 
-    async saveOptions({ id, options }) {
+    async saveOptions({ id, options, breakpoints }) {
       const existingValues = this.location.getValue()
       existingValues.find((value) => value.publicId === id).options = options
+      existingValues.find((value) => value.publicId === id).breakpoints =
+        breakpoints
 
       await this.location.setValue(existingValues)
       this.fillExistingValues()

@@ -74,11 +74,17 @@
       v-if="showOptions"
       class="options-row bg-gray-200 p-4 border-gray-300 border rounded-b-md border-t-0"
     >
-      <label for="options" class="mb-2 block font-bold"
-        >Image Query Parameters</label
-      >
+      <label for="options" class="mb-2 block font-bold">
+        Base Image Options
+      </label>
+      <p class="text-gray-700 text-xs mb-2 max-w-md">
+        This field is used for cloiudinary URL parameters that every image
+        get's. Think about file type (f_auto) and quality settigns (q_auto:best)
+        here. These settings are copied from the component parameter definition
+        in the component library.
+      </p>
 
-      <div class="flex">
+      <div class="mb-4">
         <input
           v-model="options"
           type="text"
@@ -86,14 +92,64 @@
           class="uniform-input uniform-input-text mr-2"
           placeholder="q_auto,f_auto"
         />
-
-        <button
-          class="inline-flex items-center border-transparent font-medium rounded-md focus:outline-none focus:ring px-6 py-3 text-base leading-6 tracking-wider bg-secondary text-white hover:bg-opacity-75 border focus:border-gray-700 active:bg-opacity-75 focus:ring relative"
-          @click="save"
-        >
-          save
-        </button>
       </div>
+
+      <div>
+        <h3 class="mb-4 block text-3xl font-bold">Breakpoints</h3>
+        <p class="text-gray-700 text-xs mb-2 max-w-md">
+          These options allow you to create different image assets per
+          breakpoint effectively letting you use the <picture /> tag in its full
+          glory. Breakpoints are set in the global options for the Cloudinary
+          Mesh Integration.
+        </p>
+        <div v-for="breakpoint in breakpoints" :key="breakpoint.name">
+          <label class="mb-2 block font-bold"
+            >{{ breakpoint.name }} (min-width:
+            {{ breakpoint.minWidth }}px)</label
+          >
+          <label
+            :for="`srcset-${breakpoint.name}`"
+            class="text-gray-700 text-xs"
+            >Srcset (only use Cloudinary width properties here)</label
+          >
+          <input
+            v-model="breakpointSrcset[breakpoint.name]"
+            type="text"
+            :name="`srcset-${breakpoint.name}`"
+            class="uniform-input uniform-input-text mb-4"
+            placeholder="w_200,w_300"
+          />
+          <label :for="`sizes-${breakpoint.name}`" class="text-gray-700 text-xs"
+            >Sizes</label
+          >
+          <input
+            v-model="breakpointSizes[breakpoint.name]"
+            type="text"
+            :name="`sizes-${breakpoint.name}`"
+            class="uniform-input uniform-input-text mb-4"
+            placeholder="(max-width: 710px) 120px, 278px"
+          />
+          <label
+            :for="`modifiers-${breakpoint.name}`"
+            class="text-gray-700 text-xs"
+            >Modifiers</label
+          >
+          <input
+            v-model="breakpointModifiers[breakpoint.name]"
+            type="text"
+            :name="`modifiers-${breakpoint.name}`"
+            class="uniform-input uniform-input-text mb-4"
+            placeholder="c_crop,g_face"
+          />
+        </div>
+      </div>
+
+      <button
+        class="inline-flex items-center border-transparent font-medium rounded-md focus:outline-none focus:ring px-6 py-3 text-base leading-6 tracking-wider bg-secondary text-white hover:bg-opacity-75 border focus:border-gray-700 active:bg-opacity-75 focus:ring relative"
+        @click="save"
+      >
+        save
+      </button>
     </div>
   </div>
 </template>
@@ -103,19 +159,44 @@ export default {
   name: 'ItemRow',
   props: {
     asset: { type: Object, required: true },
+    breakpoints: { type: Array, required: true },
   },
   data() {
     return {
       showOptions: false,
+      breakpointSrcset: [],
+      breakpointSizes: [],
+      breakpointModifiers: [],
       options: this.asset.options,
     }
   },
 
+  mounted() {
+    this.asset.breakpoints.forEach((breakpoint) => {
+      this.breakpointSrcset[breakpoint.name] = breakpoint.srcset
+      this.breakpointSizes[breakpoint.name] = breakpoint.sizes
+      this.breakpointModifiers[breakpoint.name] = breakpoint.modifiers
+    })
+  },
+
   methods: {
     save() {
+      const breakpoints = []
+
+      this.breakpoints.forEach((breakpoint) => {
+        breakpoints.push({
+          name: breakpoint.name,
+          minWidth: breakpoint.minWidth,
+          srcset: this.breakpointSrcset[breakpoint.name],
+          sizes: this.breakpointSizes[breakpoint.name],
+          modifiers: this.breakpointModifiers[breakpoint.name],
+        })
+      })
+
       this.$emit('saveOptions', {
         id: this.asset.publicId,
         options: this.options,
+        breakpoints,
       })
     },
   },

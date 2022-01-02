@@ -5,49 +5,111 @@
     </template>
 
     <template v-else>
-      <h1 class="text-4xl font-bold mb-4">Cloudinary Settings</h1>
-      <form @submit.prevent="onSubmit">
+      <h1 class="text-4xl font-bold mb-4">Cloudinary</h1>
+
+      <div class="my-8 bg-gray-200 px-8 py-6">
+        <h2 class="text-primary font-bold text-2xl mb-2">
+          Authentication settings
+        </h2>
+        <form @submit.prevent="onSubmit">
+          <div class="mb-6">
+            <label for="cloudname" class="mb-2 block font-bold">
+              Cloud name
+            </label>
+            <input
+              v-model="cloudname"
+              type="text"
+              name="cloudname"
+              class="uniform-input uniform-input-text"
+              required
+            />
+          </div>
+          <div class="mb-6">
+            <label for="apikey" class="mb-2 block font-bold"> API key </label>
+            <input
+              v-model="apikey"
+              type="text"
+              name="apikey"
+              class="uniform-input uniform-input-text"
+              required
+            />
+          </div>
+          <div class="mb-6">
+            <label for="username" class="mb-2 block font-bold">
+              Username
+            </label>
+            <input
+              v-model="username"
+              type="text"
+              name="username"
+              class="uniform-input uniform-input-text"
+              required
+            />
+          </div>
+          <div>
+            <button
+              type="submit"
+              class="inline-flex items-center border-transparent font-medium focus:outline-none focus:ring px-6 py-3 text-base leading-6 tracking-wider bg-secondary text-white hover:bg-opacity-75 border focus:border-gray-700 active:bg-opacity-75 focus:ring relative"
+            >
+              Save
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="my-8 bg-gray-200 px-8 py-6">
+        <h2 class="text-primary font-bold text-2xl mb-2">
+          Responsive settings
+        </h2>
+
         <div class="mb-6">
           <label for="cloudname" class="mb-2 block font-bold">
-            Cloud name
+            Breakpoints (minwidth)
           </label>
-          <input
-            v-model="cloudname"
-            type="text"
-            name="cloudname"
-            class="uniform-input uniform-input-text"
-            required
-          />
-        </div>
-        <div class="mb-6">
-          <label for="apikey" class="mb-2 block font-bold"> API key </label>
-          <input
-            v-model="apikey"
-            type="text"
-            name="apikey"
-            class="uniform-input uniform-input-text"
-            required
-          />
-        </div>
-        <div class="mb-6">
-          <label for="username" class="mb-2 block font-bold"> Username </label>
-          <input
-            v-model="username"
-            type="text"
-            name="username"
-            class="uniform-input uniform-input-text"
-            required
-          />
-        </div>
-        <div class="mb-6">
-          <button
-            type="submit"
-            class="inline-flex items-center border-transparent font-medium focus:outline-none focus:ring px-6 py-3 text-base leading-6 tracking-wider bg-secondary text-white hover:bg-opacity-75 border focus:border-gray-700 active:bg-opacity-75 focus:ring relative"
+
+          <div
+            v-for="breakpoint in breakpoints"
+            :key="breakpoint.name"
+            class="flex mb-4"
           >
-            Save
-          </button>
+            <input
+              v-model="breakpoint.name"
+              type="text"
+              class="uniform-input uniform-input-text w-36 mr-4"
+              required
+              placeholder="Name"
+            />
+
+            <input
+              v-model="breakpoint.minWidth"
+              type="number"
+              class="uniform-input uniform-input-text w-36"
+              required
+              placeholder="minWidth"
+            />
+            <button
+              class="ml-4 inline-flex items-center border-transparent font-medium focus:outline-none focus:ring px-6 py-3 text-base leading-6 tracking-wider bg-secondary text-white hover:bg-opacity-75 border focus:border-gray-700 active:bg-opacity-75 focus:ring relative"
+              @click="removeBreakpoint(breakpoint.name)"
+            >
+              remove
+            </button>
+          </div>
         </div>
-      </form>
+
+        <button
+          class="inline-flex items-center border-transparent font-medium focus:outline-none focus:ring px-6 py-3 text-base leading-6 tracking-wider bg-secondary text-white hover:bg-opacity-75 border focus:border-gray-700 active:bg-opacity-75 focus:ring relative"
+          @click="addBreakpoint"
+        >
+          + breakpoint
+        </button>
+        <button
+          v-if="breakpoints.length > 0"
+          class="inline-flex items-center border-transparent font-medium focus:outline-none focus:ring px-6 py-3 text-base leading-6 tracking-wider bg-secondary text-white hover:bg-opacity-75 border focus:border-gray-700 active:bg-opacity-75 focus:ring relative"
+          @click.prevent="onSubmit"
+        >
+          Save
+        </button>
+      </div>
     </template>
   </main>
 </template>
@@ -65,6 +127,7 @@ export default {
       error: '',
       sdk: null,
       location: null,
+      breakpoints: [],
     }
   },
   async mounted() {
@@ -87,7 +150,8 @@ export default {
       await this.location.setValue({
         cloudname: this.cloudname,
         apikey: this.apikey,
-        usesername: this.usesername,
+        username: this.username,
+        breakpoints: this.breakpoints,
       })
     },
 
@@ -96,6 +160,20 @@ export default {
       this.cloudname = existingValues.cloudname
       this.apikey = existingValues.apikey
       this.username = existingValues.username
+      this.breakpoints = existingValues.breakpoints
+    },
+
+    addBreakpoint() {
+      this.breakpoints.push({
+        name: 'Name',
+        minWidth: 'minWidth',
+      })
+    },
+
+    removeBreakpoint(name) {
+      this.breakpoints = this.breakpoints.filter(
+        (breakpoint) => breakpoint.name !== name
+      )
     },
   },
 }
