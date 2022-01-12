@@ -160,7 +160,7 @@ export default {
       this.cloudname = existingValues.cloudname
       this.apikey = existingValues.apikey
       this.username = existingValues.username
-      this.breakpoints = existingValues.breakpoints
+      this.breakpoints = existingValues?.breakpoints || []
     },
 
     addBreakpoint() {
