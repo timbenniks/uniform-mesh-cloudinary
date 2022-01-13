@@ -5,7 +5,21 @@
       :class="{ 'rounded-t-md': showOptions, 'rounded-md': !showOptions }"
     >
       <div class="p-4 pl-8 flex flex-grow mr-2 gap-2 items-center relative">
-        <img :src="asset.previewUrl" width="150" class="block" />
+        <img
+          v-if="asset.resourceType === 'image'"
+          :src="asset.previewUrl"
+          width="150"
+          class="block"
+        />
+
+        <video
+          v-if="asset.resourceType === 'video'"
+          :src="asset.previewUrl"
+          width="150"
+          class="block"
+          muted
+          controls
+        />
 
         <div class="flex-grow">
           <div class="inline-flex relative items-start">
