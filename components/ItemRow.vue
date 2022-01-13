@@ -89,13 +89,27 @@
       class="options-row bg-gray-200 p-4 border-gray-300 border rounded-b-md border-t-0"
     >
       <label for="options" class="mb-2 block font-bold">
+        Alternative tag
+      </label>
+
+      <div class="mb-4">
+        <input
+          v-model="alt"
+          type="text"
+          name="alt"
+          class="uniform-input uniform-input-text mr-2"
+          placeholder="A nice text describing this media item"
+        />
+      </div>
+
+      <label for="options" class="mb-2 block font-bold">
         Base Image Options
       </label>
       <p class="text-gray-700 text-xs mb-2 max-w-md">
-        This field is used for cloiudinary URL parameters that every image
-        get's. Think about file type (f_auto) and quality settigns (q_auto:best)
-        here. These settings are copied from the component parameter definition
-        in the component library.
+        This field is used for Cloudinary URL parameters that every image get's.
+        Think about file type (f_auto) and quality settigns (q_auto:best) here.
+        These settings are copied from the component parameter definition in the
+        component library.
       </p>
 
       <div class="mb-4">
@@ -182,6 +196,7 @@ export default {
       breakpointSizes: [],
       breakpointModifiers: [],
       options: this.asset.options,
+      alt: '',
     }
   },
 
@@ -191,6 +206,10 @@ export default {
       this.breakpointSizes[breakpoint.name] = breakpoint.sizes
       this.breakpointModifiers[breakpoint.name] = breakpoint.modifiers
     })
+
+    if (this.asset.alt) {
+      this.alt = this.asset.alt
+    }
   },
 
   methods: {
@@ -210,6 +229,7 @@ export default {
       this.$emit('saveOptions', {
         id: this.asset.publicId,
         options: this.options,
+        alt: this.alt,
         breakpoints,
       })
     },

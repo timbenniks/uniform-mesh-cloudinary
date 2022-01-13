@@ -125,6 +125,7 @@ export default {
           ),
           options: this.metadata.parameterConfiguration.defaultoptions,
           breakpoints: [],
+          alt: '',
         }
       })
 
@@ -145,8 +146,9 @@ export default {
       this.fillExistingValues()
     },
 
-    async saveOptions({ id, options, breakpoints }) {
+    async saveOptions({ id, options, alt, breakpoints }) {
       const existingValues = this.location.getValue()
+      existingValues.find((value) => value.publicId === id).alt = alt
       existingValues.find((value) => value.publicId === id).options = options
       existingValues.find((value) => value.publicId === id).breakpoints =
         breakpoints
