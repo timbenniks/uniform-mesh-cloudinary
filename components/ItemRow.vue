@@ -131,6 +131,20 @@
         </button>
 
         <div class="cloudinary-editor-container"></div>
+
+        <label for="options" class="mb-2 mt-8 block font-bold">
+          Transformation
+        </label>
+
+        <div class="mb-4">
+          <input
+            v-model="transformation"
+            type="text"
+            name="transformation"
+            class="uniform-input uniform-input-text mr-2"
+            placeholder="cloudinary transformation properties"
+          />
+        </div>
       </div>
 
       <button
@@ -149,19 +163,23 @@ export default {
   props: {
     asset: { type: Object, required: true },
     metadata: { type: Object, required: true },
-    breakpoints: { type: Array, required: true },
   },
   data() {
     return {
       showOptions: false,
       options: this.asset.options,
-      alt: this.asset.alt,
+      alt: '',
+      transformation: '',
     }
   },
 
   mounted() {
     if (this.asset.alt) {
       this.alt = this.asset.alt
+    }
+
+    if (this.asset.transformation) {
+      this.alt = this.asset.transformation
     }
   },
 
@@ -188,28 +206,17 @@ export default {
 
       editor.show()
 
-      editor.on('export', function (data) {
-        console.log(data)
+      editor.on('export', (data) => {
+        this.transformation = data.transformation
       })
     },
+
     save() {
-      const breakpoints = []
-
-      this.breakpoints.forEach((breakpoint) => {
-        breakpoints.push({
-          name: breakpoint.name,
-          minWidth: breakpoint.minWidth,
-          srcset: this.breakpointSrcset[breakpoint.name],
-          sizes: this.breakpointSizes[breakpoint.name],
-          modifiers: this.breakpointModifiers[breakpoint.name],
-        })
-      })
-
       this.$emit('saveOptions', {
         id: this.asset.publicId,
         options: this.options,
         alt: this.alt,
-        breakpoints,
+        transformation: this.transformation,
       })
     },
   },

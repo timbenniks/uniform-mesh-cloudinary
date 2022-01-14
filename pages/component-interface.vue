@@ -139,7 +139,7 @@ export default {
             'q_auto,f_auto,w_150'
           ),
           options: this.metadata.parameterConfiguration.defaultoptions,
-          breakpoints: [],
+          transformation: '',
           alt: '',
         }
       })
@@ -161,12 +161,12 @@ export default {
       this.fillExistingValues()
     },
 
-    async saveOptions({ id, options, alt, breakpoints }) {
+    async saveOptions({ id, options, alt, transformation }) {
       const existingValues = this.location.getValue()
       existingValues.find((value) => value.publicId === id).alt = alt
       existingValues.find((value) => value.publicId === id).options = options
-      existingValues.find((value) => value.publicId === id).breakpoints =
-        breakpoints
+      existingValues.find((value) => value.publicId === id).transformation =
+        transformation
 
       await this.location.setValue(existingValues)
       this.fillExistingValues()
