@@ -82,18 +82,32 @@ export default {
     },
 
     initCloudinary() {
-      const cloudinaryExists = setInterval(() => {
+      const cloudinaryExists = setInterval(async () => {
         if (window.cloudinary) {
           clearInterval(cloudinaryExists)
           this.cloudinary = window.cloudinary
+          const { cloudname, apikey, apisecret, username } =
+            this.metadata.settings
 
-          const { cloudname, apikey, username } = this.metadata.settings
+          const signatureOptions = new URLSearchParams({
+            apisecret,
+            cloudname,
+            username,
+          })
+
+          const signatureResponse = await fetch(
+            `/.netlify/functions/authentication-signature?${signatureOptions}`
+          )
+
+          const signature = await signatureResponse.json()
 
           this.cloudinary.openMediaLibrary(
             {
               cloud_name: cloudname,
               api_key: apikey,
               username,
+              timestamp: Date.now(),
+              signature: signature.hash,
               multiple: true,
               remove_header: true,
               inline_container: '.cloudinary-container',

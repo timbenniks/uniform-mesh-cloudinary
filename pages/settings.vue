@@ -11,6 +11,10 @@
         <h2 class="text-primary font-bold text-2xl mb-2">
           Authentication settings
         </h2>
+        <p class="mb-8 text-sm">
+          These settings are used to create an authentication signature which
+          allows all users in Uniform to use the Cloudinary integration
+        </p>
         <form @submit.prevent="onSubmit">
           <div class="mb-6">
             <label for="cloudname" class="mb-2 block font-bold">
@@ -30,6 +34,18 @@
               v-model="apikey"
               type="text"
               name="apikey"
+              class="uniform-input uniform-input-text"
+              required
+            />
+          </div>
+          <div class="mb-6">
+            <label for="apikey" class="mb-2 block font-bold">
+              API Secret
+            </label>
+            <input
+              v-model="apisecret"
+              type="password"
+              name="apisecret"
               class="uniform-input uniform-input-text"
               required
             />
@@ -69,6 +85,7 @@ export default {
     return {
       cloudname: '',
       apikey: '',
+      apisecret: '',
       username: '',
       error: '',
       sdk: null,
@@ -95,6 +112,7 @@ export default {
       await this.location.setValue({
         cloudname: this.cloudname,
         apikey: this.apikey,
+        apisecret: this.apisecret,
         username: this.username,
       })
     },
@@ -103,6 +121,7 @@ export default {
       const existingValues = this.location.getValue()
       this.cloudname = existingValues.cloudname
       this.apikey = existingValues.apikey
+      this.apisecret = existingValues.apisecret
       this.username = existingValues.username
     },
   },
