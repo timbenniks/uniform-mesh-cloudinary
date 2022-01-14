@@ -1,23 +1,20 @@
 # uniform-mesh-cloudinary
 
+This package uses netlify functions (./netlify/functions/authentication-signature) to create an authentication has for Cloudinary widgets.
+Make sure to install netlify CLI for local development.
+
 ## Build Setup
 
 ```bash
 # install dependencies
 $ yarn install
 
-# serve with hot reload at localhost:3000
-$ yarn dev
-
-# build for production and launch server
-$ yarn build
-$ yarn start
+# serve with hot reload at localhost:8888
+$ netlify dev
 
 # generate static project
 $ yarn generate
 ```
-
-For detailed explanation on how things work, check out the [documentation](https://nuxtjs.org).
 
 # Location configuration in Uniform
 
@@ -45,13 +42,13 @@ Add an external integration in the Uniform dashboard and use the following for t
       "url": "/settings"
     }
   },
-  "baseLocationUrl": "http://localhost:3000"
+  "baseLocationUrl": "http://localhost:8888"
 }
 ```
 
 # Location configuration notes
 
-- `baseLocationUrl` is used to prefix URL paths for specific locations. For instance, the `settings.url` property in the JSON above is `/settings`. When that location loads, the resolved URL will be `http://localhost:3000/settings`
+- `baseLocationUrl` is used to prefix URL paths for specific locations. For instance, the `settings.url` property in the JSON above is `/settings`. When that location loads, the resolved URL will be `http://localhost:8888/settings`
 
 - `locations` contains configuration data for each location where the integration may appear.
   - `install` is the `Project Settings > Integrations` page in the Uniform dashboard. The `install.description` property can be used to provide descriptive text that will be rendered when a user adds an integration.

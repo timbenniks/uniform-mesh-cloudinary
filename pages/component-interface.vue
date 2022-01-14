@@ -8,9 +8,10 @@
       <label class="mb-2 block font-bold">Cloudinary</label>
       <ItemRow
         v-for="asset in selectedAssets"
-        :key="asset.public_id"
+        :key="asset.publicId"
         :breakpoints="breakpoints"
         :asset="asset"
+        :metadata="metadata"
         @unlink="unlink"
         @saveOptions="saveOptions"
       />
@@ -20,7 +21,7 @@
         @click="toggleCloudinary"
       >
         <span v-if="showCloudinary">Close media library</span>
-        <span v-else>Open media library</span>
+        <span v-else>Select asset from media library</span>
       </button>
 
       <div

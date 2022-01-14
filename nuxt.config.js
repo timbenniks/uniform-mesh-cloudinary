@@ -18,6 +18,9 @@ export default {
       {
         src: 'https://media-library.cloudinary.com/global/all.js',
       },
+      {
+        src: 'https://media-editor.cloudinary.com/all.js',
+      },
     ],
   },
   components: true,

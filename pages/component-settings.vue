@@ -20,7 +20,7 @@
           />
         </div>
 
-        <div class="flex items-center uniform-input-label gap-2 mb-6">
+        <!-- <div class="flex items-center uniform-input-label gap-2 mb-6">
           <input
             id="responsive"
             v-model="responsive"
@@ -32,7 +32,7 @@
           <label class="uniform-checkbox-label" for="responsive">
             Advanced responsive usage
           </label>
-        </div>
+        </div> -->
       </form>
     </template>
   </main>
