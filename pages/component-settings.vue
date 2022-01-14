@@ -19,6 +19,20 @@
             placeholder="q_auto,f_auto"
           />
         </div>
+
+        <div class="flex items-center uniform-input-label gap-2 mb-6">
+          <input
+            id="responsive"
+            v-model="responsive"
+            type="checkbox"
+            name="responsive"
+            class="uniform-input-checkbox"
+            value="false"
+          />
+          <label class="uniform-checkbox-label" for="responsive">
+            Advanced responsive usage
+          </label>
+        </div>
       </form>
     </template>
   </main>
@@ -32,6 +46,7 @@ export default {
   data() {
     return {
       defaultoptions: '',
+      responsive: null,
       error: '',
       sdk: null,
       location: null,
@@ -40,6 +55,9 @@ export default {
 
   watch: {
     defaultoptions(val) {
+      this.save(val)
+    },
+    responsive(val) {
       this.save(val)
     },
   },
@@ -62,12 +80,14 @@ export default {
     async save() {
       await this.location.setValue({
         defaultoptions: this.defaultoptions,
+        responsive: this.responsive,
       })
     },
 
     fillExistingValues() {
       const existingValues = this.location.getValue()
       this.defaultoptions = existingValues.defaultoptions
+      this.responsive = existingValues.responsive
     },
   },
 }
