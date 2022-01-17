@@ -125,12 +125,10 @@
       <div class="my-8">
         <button
           class="inline-flex items-center border-transparent font-medium rounded-md focus:outline-none focus:ring px-6 py-3 text-base leading-6 tracking-wider bg-secondary text-white hover:bg-opacity-75 border focus:border-gray-700 active:bg-opacity-75 focus:ring relative"
-          @click="initEditor"
+          @click="toggleEditor"
         >
           Edit image in Cloudinary
         </button>
-
-        <div class="cloudinary-editor-container"></div>
 
         <label for="options" class="mb-2 mt-8 block font-bold">
           Transformation
@@ -170,6 +168,9 @@ export default {
       options: this.asset.options,
       alt: '',
       transformation: '',
+      editor: null,
+      editorInstantiated: false,
+      editorShown: false,
     }
   },
 
@@ -179,22 +180,36 @@ export default {
     }
 
     if (this.asset.transformation) {
-      this.alt = this.asset.transformation
+      this.transformation = this.asset.transformation
     }
   },
 
   methods: {
     initEditor() {
-      const editor = window.cloudinary.mediaEditor({
-        appendTo: '.cloudinary-editor-container',
-        mode: 'inline',
-      })
+      this.editor = window.cloudinary.mediaEditor()
 
-      editor.update({
+      this.editor.update({
         publicIds: [this.asset.publicId],
         cloudName: this.metadata.settings.cloudname,
         image: {
+          transformation: [],
+          // maxWidth: 2000,
+          // maxHeight: 2000,
           steps: ['resizeAndCrop', 'export'],
+          resizeAndCrop: {
+            presets: [
+              {
+                label: 'Hero',
+                width: 1800,
+                aspectRatio: '21:9',
+              },
+              {
+                label: 'Tile',
+                width: 500,
+                aspectRatio: '16:9',
+              },
+            ],
+          },
           export: {
             formats: ['auto'],
             quality: ['auto'],
@@ -204,11 +219,20 @@ export default {
         },
       })
 
-      editor.show()
-
-      editor.on('export', (data) => {
+      this.editor.on('export', (data) => {
         this.transformation = data.transformation
       })
+
+      this.editorInstantiated = true
+    },
+
+    toggleEditor() {
+      if (!this.editorInstantiated) {
+        this.initEditor()
+      }
+
+      this.editor.show()
+      this.editorShown = !this.editorShown
     },
 
     save() {
