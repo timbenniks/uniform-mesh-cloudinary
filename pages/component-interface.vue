@@ -9,7 +9,6 @@
       <ItemRow
         v-for="asset in selectedAssets"
         :key="asset.publicId"
-        :breakpoints="breakpoints"
         :asset="asset"
         :metadata="metadata"
         @unlink="unlink"
@@ -48,7 +47,6 @@ export default {
       cloudinaryInstantiated: false,
       showCloudinary: false,
       selectedAssets: [],
-      breakpoints: [],
     }
   },
   async mounted() {
@@ -62,7 +60,6 @@ export default {
       if (this.location) {
         clearInterval(locationExists)
         this.metadata = this.location.getMetadata()
-        this.breakpoints = this.metadata?.settings?.breakpoints || []
         this.fillExistingValues()
       }
     }, 100)
@@ -87,6 +84,7 @@ export default {
         if (window.cloudinary) {
           clearInterval(cloudinaryExists)
           this.cloudinary = window.cloudinary
+
           const { cloudname, apikey, apisecret, username } =
             this.metadata.settings
 
@@ -130,7 +128,7 @@ export default {
           version: asset.version,
           previewUrl: asset.secure_url.replace(
             `v${asset.version}`,
-            'q_auto,f_auto,w_150'
+            'q_auto:low,f_auto,w_150'
           ),
           options: this.metadata.parameterConfiguration.defaultoptions,
           transformation: '',

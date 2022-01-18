@@ -102,26 +102,6 @@
         />
       </div>
 
-      <label for="options" class="mb-2 block font-bold">
-        Base Image Options
-      </label>
-      <p class="text-gray-700 text-xs mb-2 max-w-md">
-        This field is used for Cloudinary URL parameters that every image
-        receives. Think about file type (f_auto) and quality settigns
-        (q_auto:best) here. These settings are copied from the component
-        parameter definition in the component library.
-      </p>
-
-      <div class="mb-4">
-        <input
-          v-model="options"
-          type="text"
-          name="options"
-          class="uniform-input uniform-input-text mr-2"
-          placeholder="q_auto,f_auto"
-        />
-      </div>
-
       <div class="my-8">
         <button
           class="inline-flex items-center border-transparent font-medium rounded-md focus:outline-none focus:ring px-6 py-3 text-base leading-6 tracking-wider bg-secondary text-white hover:bg-opacity-75 border focus:border-gray-700 active:bg-opacity-75 focus:ring relative"
@@ -165,7 +145,6 @@ export default {
   data() {
     return {
       showOptions: false,
-      options: this.asset.options,
       alt: '',
       transformation: '',
       editor: null,
@@ -181,6 +160,8 @@ export default {
 
     if (this.asset.transformation) {
       this.transformation = this.asset.transformation
+    } else {
+      this.transformation = this.asset.options
     }
   },
 
@@ -197,18 +178,7 @@ export default {
           // maxHeight: 2000,
           steps: ['resizeAndCrop', 'export'],
           resizeAndCrop: {
-            presets: [
-              {
-                label: 'Hero',
-                width: 1800,
-                aspectRatio: '21:9',
-              },
-              {
-                label: 'Tile',
-                width: 500,
-                aspectRatio: '16:9',
-              },
-            ],
+            presets: this.metadata.parameterConfiguration.croppingTemplates,
           },
           export: {
             formats: ['auto'],
@@ -238,7 +208,6 @@ export default {
     save() {
       this.$emit('saveOptions', {
         id: this.asset.publicId,
-        options: this.options,
         alt: this.alt,
         transformation: this.transformation,
       })

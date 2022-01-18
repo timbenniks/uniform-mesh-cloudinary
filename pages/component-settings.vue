@@ -5,7 +5,7 @@
     </template>
 
     <template v-else>
-      <form @submit.prevent="onSubmit">
+      <section>
         <div class="mb-6">
           <label for="defaultoptions" class="mb-2 block font-bold">
             Default Query String Options
@@ -20,20 +20,64 @@
           />
         </div>
 
-        <!-- <div class="flex items-center uniform-input-label gap-2 mb-6">
-          <input
-            id="responsive"
-            v-model="responsive"
-            type="checkbox"
-            name="responsive"
-            class="uniform-input-checkbox"
-            value="false"
-          />
-          <label class="uniform-checkbox-label" for="responsive">
-            Advanced responsive usage
-          </label>
-        </div> -->
-      </form>
+        <div class="my-8 bg-gray-200 px-8 py-6">
+          <h2 class="text-primary font-bold text-2xl mb-2">
+            Cropping templates
+          </h2>
+
+          <div class="mb-6">
+            <div
+              v-for="tmpl in croppingTemplates"
+              :key="tmpl.label"
+              class="flex mb-4"
+            >
+              <input
+                v-model="tmpl.label"
+                type="text"
+                class="uniform-input uniform-input-text w-36"
+                required
+                placeholder="Name"
+              />
+
+              <input
+                v-model="tmpl.width"
+                type="number"
+                class="uniform-input uniform-input-text w-36 ml-4"
+                required
+                placeholder="width"
+              />
+
+              <input
+                v-model="tmpl.aspectRatio"
+                type="text"
+                class="uniform-input uniform-input-text w-36 ml-4"
+                required
+                placeholder="16:9"
+              />
+              <button
+                class="ml-4 inline-flex items-center border-transparent font-medium focus:outline-none focus:ring px-6 py-3 text-base leading-6 tracking-wider bg-secondary text-white hover:bg-opacity-75 border focus:border-gray-700 active:bg-opacity-75 focus:ring relative"
+                @click="removeCroppingTemplate(tmpl.label)"
+              >
+                remove
+              </button>
+            </div>
+          </div>
+
+          <button
+            class="inline-flex items-center border-transparent font-medium focus:outline-none focus:ring px-6 py-3 text-base leading-6 tracking-wider bg-secondary text-white hover:bg-opacity-75 border focus:border-gray-700 active:bg-opacity-75 focus:ring relative"
+            @click="addCroppingTemplate"
+          >
+            + Cropping Template
+          </button>
+
+          <button
+            class="inline-flex items-center border-transparent font-medium focus:outline-none focus:ring px-6 py-3 text-base leading-6 tracking-wider bg-secondary text-white hover:bg-opacity-75 border focus:border-gray-700 active:bg-opacity-75 focus:ring relative"
+            @click="save"
+          >
+            Save
+          </button>
+        </div>
+      </section>
     </template>
   </main>
 </template>
@@ -50,15 +94,13 @@ export default {
       error: '',
       sdk: null,
       location: null,
+      croppingTemplates: [],
     }
   },
 
   watch: {
-    defaultoptions(val) {
-      this.save(val)
-    },
-    responsive(val) {
-      this.save(val)
+    defaultoptions() {
+      this.save()
     },
   },
   async mounted() {
@@ -80,14 +122,30 @@ export default {
     async save() {
       await this.location.setValue({
         defaultoptions: this.defaultoptions,
-        responsive: this.responsive,
+        croppingTemplates: this.croppingTemplates,
       })
     },
 
     fillExistingValues() {
       const existingValues = this.location.getValue()
       this.defaultoptions = existingValues.defaultoptions
-      this.responsive = existingValues.responsive
+      this.croppingTemplates = existingValues?.croppingTemplates || []
+    },
+
+    addCroppingTemplate() {
+      this.croppingTemplates.push({
+        label: 'Label',
+        width: '',
+        aspectRatio: '',
+      })
+    },
+
+    removeCroppingTemplate(label) {
+      this.croppingTemplates = this.croppingTemplates.filter(
+        (template) => template.label !== label
+      )
+
+      this.save()
     },
   },
 }
