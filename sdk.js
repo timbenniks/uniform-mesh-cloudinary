@@ -29,3 +29,22 @@ export const useMeshSdk = async () => {
     error,
   }
 }
+
+export const useSignature = async (apisecret, cloudname, username) => {
+  const signatureOptions = new URLSearchParams({
+    apisecret,
+    cloudname,
+    username,
+  })
+
+  const signatureResponse = await fetch(
+    `/.netlify/functions/authentication-signature?${signatureOptions}`
+  )
+
+  const signature = await signatureResponse.json()
+
+  return {
+    signature: signature.hash,
+    unixtime: signature.unixtime,
+  }
+}

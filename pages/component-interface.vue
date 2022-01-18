@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { useMeshSdk } from '../sdk'
+import { useMeshSdk, useSignature } from '../sdk'
 
 export default {
   name: 'ComponentInterface',
@@ -90,25 +90,19 @@ export default {
           const { cloudname, apikey, apisecret, username } =
             this.metadata.settings
 
-          const signatureOptions = new URLSearchParams({
+          const { signature, unixtime } = await useSignature(
             apisecret,
             cloudname,
-            username,
-          })
-
-          const signatureResponse = await fetch(
-            `/.netlify/functions/authentication-signature?${signatureOptions}`
+            username
           )
-
-          const signature = await signatureResponse.json()
 
           this.cloudinary.openMediaLibrary(
             {
               cloud_name: cloudname,
               api_key: apikey,
               username,
-              timestamp: Date.now(),
-              signature: signature.hash,
+              timestamp: unixtime,
+              signature,
               multiple: true,
               remove_header: true,
               inline_container: '.cloudinary-container',
